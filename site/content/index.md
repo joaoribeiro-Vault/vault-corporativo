@@ -2,7 +2,7 @@
 title: Home - Vault Corporativo
 ---
 
-## Bem-vindo ao Vault 📘
+## Bem-vindo ao Vault Oficial da Equipe 📘
 
 Esta é a fonte única de verdade para processos, decisões e playbooks da equipe.
 
