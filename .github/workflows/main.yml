@@ -1,0 +1,37 @@
+name: 1. Vault Auto-Convert & Sync
+
+on:
+  push:
+    paths:
+      - 'input_docs/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install Dependencies
+        run: pip install -r scripts/requirements.txt
+          
+      - name: Run Converter
+        run: python scripts/convert_to_vault.py
+        
+      - name: Sync Vector DB (IA)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          VECTOR_DB_API_KEY: ${{ secrets.VECTOR_DB_API_KEY }}
+        run: python scripts/sync_vector_db.py  
+        
+      - name: Commit Changes to Content
+        run: |
+          git config --global user.name "Vault Bot"
+          git config --global user.email "bot@vault.com"
+          git add content/ site/content/
+          git commit -m "docs: conversão automática e injeção no Quartz [skip ci]" || echo "No changes"
+          git push
