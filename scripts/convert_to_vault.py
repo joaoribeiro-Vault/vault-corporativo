@@ -1,7 +1,7 @@
 import os
 import shutil
-from pypdf import PdfReader
-import docx
+import pymupdf4llm
+import mammoth
 
 INPUT_DIR = "input_docs"
 OUTPUT_DIR = "site/content"
@@ -42,15 +42,14 @@ def process_files():
                 print(f"Convertido de PDF: {filename}")
                 
             elif ext == '.docx':
-                # Se for Word, extrai o texto parágrafo por parágrafo
-                doc = docx.Document(input_path)
-                text = f"# {name}\n\n" # Cria o título principal da página
-                for para in doc.paragraphs:
-                    text += para.text + "\n\n"
+                # O NOVO MOTOR PARA WORD: Mantém tabelas, negritos e listas!
+                with open(input_path, "rb") as docx_file:
+                    result = mammoth.convert_to_markdown(docx_file)
+                    text = f"# {name}\n\n{result.value}"
                     
                 with open(output_path, "w", encoding="utf-8") as f:
                     f.write(text)
-                print(f"Convertido de DOCX: {filename}")
+                print(f"Convertido de DOCX com formatacao: {filename}")
                 
             else:
                 print(f"Formato ignorado (apenas MD, PDF e DOCX): {filename}")
