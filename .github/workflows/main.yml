@@ -32,6 +32,6 @@ jobs:
         run: |
           git config --global user.name "Vault Bot"
           git config --global user.email "bot@vault.com"
-          git add content/ site/content/
+          git add site/content/
           git commit -m "docs: conversão automática e injeção no Quartz [skip ci]" || echo "No changes"
           git push
