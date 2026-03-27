@@ -1,6 +1,7 @@
 import os
 import glob
 from google import genai
+from google.genai import types
 from pinecone import Pinecone
 
 # 1. Conecta usando a NOVA biblioteca do Google
@@ -41,13 +42,17 @@ def sync_to_vector_db():
         for i, chunk in enumerate(chunks):
             if not chunk.strip(): continue
             
-            # 2. Usa o motor oficial atual com a sintaxe nova
+            # 2. O Novo Motor Oficial de 2026 (Força Total de 3072!)
             response = client.models.embed_content(
-                model='text-embedding-004',
+                model='gemini-embedding-001',
                 contents=chunk,
+                config=types.EmbedContentConfig(
+                    task_type="RETRIEVAL_DOCUMENT",
+                    output_dimensionality=3072 # Encaixa perfeito na sua gaveta de 3072!
+                )
             )
             
-            # Extrai os 768 números
+            # Extrai os números
             embedding_values = response.embeddings[0].values
             
             chunk_id = f"{filename}-chunk-{i}"
